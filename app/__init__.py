@@ -13,8 +13,10 @@ def create_app():
 
     # import blueprints
     from app.auth import auth_bp
+    from app.users import user_bp
 
     # register blueprints
     app.register_blueprint(auth_bp)
+    app.register_blueprint(user_bp)
 
     return app
