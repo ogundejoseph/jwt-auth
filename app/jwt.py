@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify
-from app.extensions import jwt, db
+from app import jwt, db
 from app.models import User, TokenBlocklist
 
 jwt_bp = Blueprint('jwt', __name__)
