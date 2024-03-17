@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify
-from app.extensions import jwt
-from app.models import User
+from app.extensions import jwt, db
+from app.models import User, TokenBlocklist
 
 jwt_bp = Blueprint('jwt', __name__)
 
@@ -53,3 +53,11 @@ def missing_token_callback(error):
             "error": "authorization_header"
         }
     ), 401
+
+@jwt.token_in_blocklist_loader
+def token_in_blocklist_callback(jwt_header, jwt_data):
+    jti = jwt_data['jti']
+
+    token = db.session.query(TokenBlocklist).filter(TokenBlocklist.jti==jti).scalar()
+
+    return token
