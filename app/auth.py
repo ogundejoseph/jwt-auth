@@ -55,3 +55,17 @@ def login_user():
         ), 200
     
     return jsonify({"error": "Invalid username or password"}), 400
+
+
+@auth_bp.get('/user')
+@jwt_required()
+def get_user():
+    return jsonify(
+        {
+            "message": "Request successful", 
+            "user_details": {
+                "username":current_user.username, 
+                "email":current_user.email
+            }
+        }
+    )

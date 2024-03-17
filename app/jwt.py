@@ -1,7 +1,29 @@
 from flask import Blueprint, jsonify
 from app.extensions import jwt
+from app.models import User
 
 jwt_bp = Blueprint('jwt', __name__)
+
+# load user
+
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_headers, jwt_data):
+    identity = jwt_data['sub']
+
+    return User.query.filter_by(username=identity).one_or_none()
+
+# additional claims
+
+@jwt.additional_claims_loader
+def make_additional_claims(identity):
+    if identity == "johndoe":
+        '''
+        users that meet this condition is_staff will be set to True
+        in this case johndoe
+        '''
+        return {"is_staff": True}
+    
+    return {"is_staff": False}
 
 # error handlers
 
