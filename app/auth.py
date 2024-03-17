@@ -69,3 +69,13 @@ def get_user():
             }
         }
     )
+
+
+@auth_bp.get('/refresh')
+@jwt_required(refresh=True)
+def refresh_access():
+    identity = get_jwt_identity()
+
+    new_access_token = create_access_token(identity=identity)
+
+    return jsonify({"access_token": new_access_token})
